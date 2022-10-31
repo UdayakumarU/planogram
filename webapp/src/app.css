@@ -1,0 +1,11 @@
+.callout-danger{
+    border-right: 0.6em rgb(255, 33, 33) solid;
+}
+
+.callout-warning{
+    border-right: 0.6em rgb(255, 174, 0) solid;
+}
+
+.callout-info{
+    border-right: 0.6em rgb(0, 255, 225) solid;
+}
