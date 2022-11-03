@@ -1,21 +1,21 @@
 export const ProducrLists = () =>{
     const products = [
         {
-            id: 1,
+            id: '101',
             imgUrl: "https://bellavitashop.co.uk/5462-large_default/nutella-biscuits-304g-ferrero.jpg",
             name: "Nutella biscuits",
             quantity: 5,
             isMisplaced: false
         },
         { 
-            id: 2, 
+            id: '102', 
             imgUrl: "https://www.colbeck.co.uk/wp-content/uploads/2017/11/Diet-Coke-330ml-021074.jpg", 
             name: "Diet coke", 
             quantity: 4, 
             isMisplaced: true 
         },
         { 
-            id: 3, 
+            id: '103', 
             imgUrl: "https://tastemerchants.co.uk/wp-content/uploads/2022/06/ert003-600x600.jpg", 
             name: "Hummus Chips", 
             quantity: 0, 

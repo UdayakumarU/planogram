@@ -1,0 +1,13 @@
+.full-shelf {
+    height: 50vh;
+}
+
+.item:hover{
+    box-shadow: 2px 2px 9px;
+    cursor: pointer;
+}
+
+.item-selected{
+    box-shadow: 3px 3px 9px #456c39;
+    border: #456c39 1px solid;
+}
