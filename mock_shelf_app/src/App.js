@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { Shelf } from "./shelf";
-import { mapItemsDetail, deleteItemFromTheShelf } from "./utils";
+import { mapItemsDetail, getItemByPosition, deleteItemFromTheShelf, getUpperShelfFreeSpace, getLowerShelfFreeSpace, swapItems } from "./utils";
 import { Navigator } from "./navigator";
 
 const App = () => {
@@ -66,18 +66,46 @@ const initialItemsInTheShelf = [
       ]
   }
 ];
-
+  const freePosition = {rowIndex:-1, columnIndex:-1}
   const [itemsInTheShelf, changeItemsInTheShelf] = useState(mapItemsDetail(initialItemsInTheShelf, itemsDetail));
   const [selectedItem, setSelectedItem] = useState({});
+  const [upperShelfFreeSpace, setUpperShelfFreeSpace] = useState(freePosition);
+  const [lowerShelfFreeSpace, setLowerShelfFreeSpace] = useState(freePosition);
+
 
   const deleteItem = () =>{
     const { rowIndex, columnIndex } = selectedItem;
     const updatedShelf = deleteItemFromTheShelf(itemsInTheShelf, rowIndex, columnIndex);
     changeItemsInTheShelf(updatedShelf);
+    setUpperShelfFreeSpace(freePosition);
+    setLowerShelfFreeSpace(freePosition);
   };
+
+  const moveItemUp = () =>{
+    const itemsAfterSwapping = swapItems(itemsInTheShelf, selectedItem, upperShelfFreeSpace);
+    changeItemsInTheShelf(itemsAfterSwapping);
+    handleItemSelection({
+      item: getItemByPosition(itemsAfterSwapping, upperShelfFreeSpace),
+      ...upperShelfFreeSpace
+    });
+  }
+
+  const moveItemDown = () =>{
+    const itemsAfterSwapping = swapItems(itemsInTheShelf, selectedItem, lowerShelfFreeSpace);
+    changeItemsInTheShelf(itemsAfterSwapping);
+    handleItemSelection({
+      item: getItemByPosition(itemsAfterSwapping, lowerShelfFreeSpace),
+      ...lowerShelfFreeSpace
+    });
+  }
 
   const handleItemSelection = (event) =>{
     setSelectedItem(event);
+    const { rowIndex, columnIndex } = event;
+    const { freeUpperRowIndex, freeUpperColumnIndex } = getUpperShelfFreeSpace(itemsInTheShelf, rowIndex, columnIndex);
+    const { freeLowerRowIndex, freeLowerColumnIndex } = getLowerShelfFreeSpace(itemsInTheShelf, rowIndex, columnIndex);
+    setUpperShelfFreeSpace({rowIndex:freeUpperRowIndex, columnIndex:freeUpperColumnIndex});
+    setLowerShelfFreeSpace({rowIndex:freeLowerRowIndex, columnIndex:freeLowerColumnIndex});
   };
 
   return (
@@ -93,6 +121,10 @@ const initialItemsInTheShelf = [
         <div className="col-2">
           <Navigator
             deleteItem={deleteItem}
+            moveItemUp={moveItemUp}
+            moveItemDown={moveItemDown}
+            isUpperShelfFree={(upperShelfFreeSpace.rowIndex !== -1 && upperShelfFreeSpace.columnIndex !== -1)}
+            isLowerShelfFree ={(lowerShelfFreeSpace.rowIndex !== -1 && lowerShelfFreeSpace.columnIndex !== -1)}
             selectedItemId = {selectedItem.item?.id}
           />
         </div>
