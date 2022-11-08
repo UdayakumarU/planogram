@@ -41,37 +41,33 @@ export const deleteItemFromTheShelf = (itemsInTheShelf, rowIndex, columnIndex) =
 
 export const getUpperShelfFreeSpace = (itemsInTheShelf, rowIndex) =>{
     const freePosition = { freeUpperRowIndex:-1, freeUpperColumnIndex: -1};
-    if(rowIndex === 0) 
-        return freePosition;
-    
-    let freeColumnIndex = -1;
-    const rowLength = itemsInTheShelf[rowIndex-1].items.length;
-    for(let i=0; i<rowLength; ++i){
-        if(itemsInTheShelf[rowIndex-1].items[i].itemId === ""){
-            freeColumnIndex = i;
-            break;
+    const rowLength = itemsInTheShelf[rowIndex]?.items.length;
+
+    for(let j=rowIndex-1; j>=0; --j){
+        for(let i=0; i<rowLength; ++i){
+            if(itemsInTheShelf[j].items[i].itemId === ""){
+                freePosition.freeUpperRowIndex = j;
+                freePosition.freeUpperColumnIndex = i;
+                return freePosition;
+            }
         }
     }
-    freePosition.freeUpperRowIndex = rowIndex-1;
-    freePosition.freeUpperColumnIndex = freeColumnIndex;
     return freePosition;
 }
 
 export const getLowerShelfFreeSpace = (itemsInTheShelf, rowIndex) =>{
     const freePosition = { freeLowerRowIndex:-1, freeLowerColumnIndex: -1};
-    if(rowIndex === itemsInTheShelf.length-1) 
-        return freePosition;
-    
-    let freeColumnIndex = -1;
-    const rowLength = itemsInTheShelf[rowIndex+1].items.length;
-    for(let i=0; i<rowLength; ++i){
-        if(itemsInTheShelf[rowIndex+1].items[i].itemId === ""){
-            freeColumnIndex = i;
-            break;
+    const rowLength = itemsInTheShelf[rowIndex+1]?.items.length;
+
+    for(let j=rowIndex+1; j<itemsInTheShelf.length; ++j){
+        for(let i=0; i<rowLength; ++i){
+            if(itemsInTheShelf[j].items[i].itemId === ""){
+                freePosition.freeLowerRowIndex = j;
+                freePosition.freeLowerColumnIndex = i;
+                return freePosition;
+            }
         }
     }
-    freePosition.freeLowerRowIndex = rowIndex+1;
-    freePosition.freeLowerColumnIndex = freeColumnIndex;
     return freePosition;
 }
 
@@ -80,5 +76,5 @@ export const swapItems = (itemsInTheShelf, selectedItem, designatedItem) =>{
     const pickedItem = itemsInTheShelf[selectedItem.rowIndex].items[selectedItem.columnIndex];
     itemsInTheShelf[selectedItem.rowIndex].items[selectedItem.columnIndex] = itemsInTheShelf[designatedItem.rowIndex].items[designatedItem.columnIndex];
     itemsInTheShelf[designatedItem.rowIndex].items[designatedItem.columnIndex] = pickedItem;
-    return itemsInTheShelf;
+    return [...itemsInTheShelf];
 } 

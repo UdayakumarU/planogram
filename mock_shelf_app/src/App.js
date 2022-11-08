@@ -1,12 +1,15 @@
 /**
- * 1. able to rearrange the product both column and row
+ * 1. able to rearrange the product between shelfs
  * 2. able to delete item
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Shelf } from "./shelf";
-import { mapItemsDetail, getItemByPosition, deleteItemFromTheShelf, getUpperShelfFreeSpace, getLowerShelfFreeSpace, swapItems } from "./utils";
 import { Navigator } from "./navigator";
+
+import { mapItemsDetail, getItemByPosition, deleteItemFromTheShelf, getUpperShelfFreeSpace, getLowerShelfFreeSpace, swapItems } from "./utils";
+import { publishItemsInTheShelf } from "./socket";
 
 const App = () => {
   
@@ -72,6 +75,9 @@ const initialItemsInTheShelf = [
   const [upperShelfFreeSpace, setUpperShelfFreeSpace] = useState(freePosition);
   const [lowerShelfFreeSpace, setLowerShelfFreeSpace] = useState(freePosition);
 
+  useEffect(()=>{
+    publishItemsInTheShelf(itemsInTheShelf);
+  },[itemsInTheShelf]);
 
   const deleteItem = () =>{
     const { rowIndex, columnIndex } = selectedItem;
@@ -109,7 +115,7 @@ const initialItemsInTheShelf = [
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container-fluid mt-5">
       <div className="row">
         <div className="col-10">
           <Shelf 
