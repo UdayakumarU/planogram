@@ -1,27 +1,20 @@
+import { useEffect, useState } from "react";
+import { getShelfStatus } from "./socket";
+
 export const ProducrLists = () =>{
-    const products = [
-        {
-            id: '101',
-            imgUrl: "https://bellavitashop.co.uk/5462-large_default/nutella-biscuits-304g-ferrero.jpg",
-            name: "Nutella biscuits",
-            quantity: 5,
-            isMisplaced: false
-        },
-        { 
-            id: '102', 
-            imgUrl: "https://www.colbeck.co.uk/wp-content/uploads/2017/11/Diet-Coke-330ml-021074.jpg", 
-            name: "Diet coke", 
-            quantity: 4, 
-            isMisplaced: true 
-        },
-        { 
-            id: '103', 
-            imgUrl: "https://tastemerchants.co.uk/wp-content/uploads/2022/06/ert003-600x600.jpg", 
-            name: "Hummus Chips", 
-            quantity: 0, 
-            isMisplaced: false
-        }
-    ];
+
+    const [ products, setProducts ] = useState([]);
+
+    useEffect(()=>{
+        fetch("http://localhost:8080/items",{method:'GET'}).then(response => response.json() )
+        .then(products =>{
+            setProducts(products);
+        })
+    },[]);
+
+    useEffect( ()=>{
+        getShelfStatus(setProducts);
+    },[products])
 
     const getCalloutClass = (qty, isMisplaced) =>{
         if(qty === 0){
@@ -31,7 +24,7 @@ export const ProducrLists = () =>{
     }
 
     return (
-        products.map (product => {
+        products?.map (product => {
             const calloutClass = `callout-${getCalloutClass(product.quantity, product.isMisplaced)}`;
             return <div className="col-12 col-sm-12 col-md-6 col-lg-4" key={product.id}>
                 <div className={`card my-4 shadow bg-white rounded ${calloutClass}`}>
@@ -40,10 +33,10 @@ export const ProducrLists = () =>{
                                 <img className="img-thumbnail" src={product.imgUrl}/>
                             </div>
                             <div className="col-6 d-flex flex-column justify-content-around align-items-center">
-                                <div class="blockquote">
+                                <div className="blockquote">
                                     {product.name}    
                                 </div>
-                                <div class="h1">
+                                <div className="h1">
                                     {product.quantity}    
                                 </div>
                             </div>
